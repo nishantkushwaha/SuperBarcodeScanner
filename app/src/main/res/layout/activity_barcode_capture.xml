@@ -16,5 +16,5 @@
     </android.support.design.widget.AppBarLayout>
 
     <include layout="@layout/content_barcode_capture" />
-    
+
 </android.support.design.widget.CoordinatorLayout>
