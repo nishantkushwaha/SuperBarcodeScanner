@@ -4,10 +4,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.TextView;
+
+import com.google.android.gms.common.api.CommonStatusCodes;
+import com.google.android.gms.vision.barcode.Barcode;
 
 public class BarcodeScannerOptionsActivity extends AppCompatActivity {
 
@@ -43,7 +47,8 @@ public class BarcodeScannerOptionsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), BarcodeCaptureActivity.class);
-
+                intent.putExtra(BarcodeCaptureActivity.AutoFocus, autoFocus.isChecked());
+                intent.putExtra(BarcodeCaptureActivity.UseFlash, useFlash.isChecked());
                 startActivityForResult(intent, BARCODE_CAPTURE);
             }
         });
@@ -52,5 +57,26 @@ public class BarcodeScannerOptionsActivity extends AppCompatActivity {
     private void setupToolbar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == BARCODE_CAPTURE) {
+            if (resultCode == CommonStatusCodes.SUCCESS) {
+                if (data != null) {
+                    Barcode barcode = data.getParcelableExtra(BarcodeCaptureActivity.BarcodeObject);
+                    statusMessage.setText("Success!");
+                    barcodeValue.setText(barcode.displayValue);
+                    Log.d("BARCODER", "Barcode read: " + barcode.displayValue);
+                } else {
+                    statusMessage.setText("Fail");
+                    Log.d("BARCODER", "No barcode has been captured");
+                }
+            } else {
+                statusMessage.setText("Error");
+            }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
     }
 }
