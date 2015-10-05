@@ -15,9 +15,9 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -34,6 +34,8 @@ import java.io.IOException;
 
 public class BarcodeCaptureActivity extends AppCompatActivity {
 
+    private Button tipsButton;
+
     private static final String TAG = "Barcode-reader";
     private static final int RC_HANDLE_GMS = 9001;
     private static final int RC_HANDLE_CAMERA_PERM = 2;
@@ -49,9 +51,9 @@ public class BarcodeCaptureActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_barcode_capture);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
+        bindViews();
+        
         preview = (CameraSourcePreview) findViewById(R.id.preview);
         graphicOverlay = (GraphicOverlay<BarcodeGraphic>) findViewById(R.id.grapich_overlay);
 
@@ -67,6 +69,16 @@ public class BarcodeCaptureActivity extends AppCompatActivity {
         } else {
             requestCameraPermission();
         }
+    }
+
+    private void bindViews() {
+        tipsButton = (Button) findViewById(R.id.cancel);
+        tipsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // TODO: open tips
+            }
+        });
     }
 
     private void requestCameraPermission() {
